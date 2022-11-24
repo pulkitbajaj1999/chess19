@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/navigation.css" />
+    <link rel="stylesheet" href="/css/board.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+    <link rel="stylesheet" href="/css/button-large.css" />
+
+    <title>Chess19</title>
+  </head>
+  <body>
+    <div id="root">
+      <div class="nav-component">
+        <div class="nav-head-component"><h1>Chess19</h1></div>
+      </div>
+      <div class="board-component">
+
+          <table id="table-white_face">
+            <% for (let row = 0; row < 8; row++) { %>
+              <tr>
+                <% for (let col = 0; col < 8; col++) { %>
+                  <% var squareColor = (row+col)&1 ? 'black' : 'white' %>
+                  <% var squareData = boardMapping[row][col] %>
+                  <% var isActive = board.moveLock.flag && board.moveLock.row === row && board.moveLock.col === col %>
+                  <td
+                    id="<%=ranks[row]%><%=files[col]%>"
+                    class="piece <%= squareColor %> <%= squareData ? `${squareData.pieceColor}-${squareData.pieceType}` : '' %> <%= isActive ? 'active' : ''%>"
+                    onclick="moveHandler(event, <%= JSON.stringify({squareData: squareData, pos: {row, col}, boardState: board}) %>)"
+                  ></td>
+                <% } %>
+              </tr>
+            <% } %>
+          </table>
+
+
+          <!-- <table id="table-black_face">
+            <% for (let row = 7; row >= 0; row--) { %>
+              <tr>
+                <% for (let col = 7; col >= 0; col--) { %>
+                  <% var squareColor = (row+col)&1 ? 'black' : 'white' %>
+                  <% var squareData = boardMapping[row][col] %>
+                  <% var isActive = board.moveLock.flag && board.moveLock.row === row && board.moveLock.col === col %>
+                  <td
+                    id="<%=ranks[row]%><%=files[col]%>"
+                    class="piece <%= squareColor %> <%= squareData ? `${squareData.pieceColor}-${squareData.pieceType}` : '' %> <%= isActive ? 'active' : ''%>"
+                    onclick="moveHandler(event, <%= JSON.stringify({squareData: squareData, pos: {row, col}, boardState: board}) %>)"
+                  ></td>
+                <% } %>
+              </tr>
+            <% } %>
+          </table> -->
+
+      </div>
+      <div class="sidebar-component">
+        <div class="sidebar-controls">
+          <button class="button-large" name="flip" onclick="actionHandler(event)">Flip</button>
+          <button class="button-large" name="undo" onClick="actionHandler(event)">Undo</button>
+          <button class="button-large" name="reset" onClick="actionHandler(event)">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+      // if (!localStorage.getItem('white_face_view')) {
+      //   localStorage.setItem('white_face_view', true)
+      // }
+      // if (localStorage.getItem('white_face_view') === 'true') {
+      //   console.log('hiding-black-table')
+      //   document.getElementById('table-black_face').style.display = 'none'
+      // }
+      // else {
+      //   console.log('hiding-white-table')
+      //   document.getElementById('table-white_face').style.display = 'none'
+      // }
+      // console.log(<%- JSON.stringify(board) %>)
+      // console.log(<%- JSON.stringify(board.moveLock) %>)
+      const actionHandler = (event) => {
+        // if (event.target.name === 'flip') {
+        //   console.log("flipping")
+        //   const current_white_face_view = localStorage.getItem('white_face_view')
+        //   localStorage.setItem('white_face_view', current_white_face_view === 'true' ? 'false' : 'true')
+        //   location.reload()
+        //   return
+        // }
+        // console.log('action:', event.target.name)
+        fetch('/action', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({action: event.target.name})
+        }).then(() => {
+          location.reload()
+        })
+      }
+    </script>
+    <script src="/js/socketLogic.js"></script>
+    <script src="/js/moveLogic.js"></script>
+  </body>
+</html>
