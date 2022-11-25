@@ -41,7 +41,6 @@ router.get('/existing', (req, res) => {
       error: 'session does not exist',
     })
   } else {
-    console.log('gameSesssions:', gameSessions)
     return res.status(200).json({
       sessionID,
       boardState: session.boardState,
@@ -55,7 +54,6 @@ router.post('/update', (req, res) => {
   if (!currentSession) {
     return res.status(404).json({ error: 'session does not exist' })
   } else {
-    console.log('gameSesssions:', gameSessions)
     if (currentSession.boardState.currentState !== newBoardState.currentState) {
       currentSession.boardState = newBoardState
       socket.getIo().emit('event', { clientID, action: 'update' })
