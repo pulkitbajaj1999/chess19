@@ -16,7 +16,6 @@ const INITIAL_STATE = {
   whiteToMove: true,
   totalMoves: 0,
   whiteFaceView: true,
-  moveLock: { flag: false, row: null, col: null },
 }
 
 class Board {
@@ -28,7 +27,6 @@ class Board {
     this.whiteToMove = INITIAL_STATE.whiteToMove
     this.totalMoves = INITIAL_STATE.totalMoves
     this.whiteFaceView = INITIAL_STATE.whiteFaceView
-    this.moveLock = INITIAL_STATE.moveLock
   }
 
   resetMoveLock() {

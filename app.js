@@ -7,7 +7,9 @@ const express = require('express')
 const bodyParser = require('body-parser')
 
 // file imports
-const chessRoutes = require('./routes/chess')
+// const chessRoutes = require('./routes/chess')
+const sessionRoutes = require('./routes/session')
+// const actionRoutes = require('./routes/action')
 
 // define variables and methods
 const app = express()
@@ -17,14 +19,30 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // serving static files
+app.use(express.static(path.join(__dirname, 'react-build')))
 app.use(express.static(path.join(__dirname, 'public')))
 
 // setting view engine
 app.set('view engine', 'ejs')
 app.set('views', 'views')
 
-// handling routes
-app.use('/', chessRoutes)
+// handling cors policy
+app.use('/*', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', '*')
+  next()
+})
+
+// serving react-app
+app.get('/', (req, res) => {
+  return res
+    .status(200)
+    .send(path.join(__dirname, 'frontend-build', 'index.html'))
+})
+
+// serving routes
+app.use('/api/v1/session', sessionRoutes)
+// app.use('/api/v1/action', actionRoutes)
 
 // handling errors
 app.use((error, req, res, next) => {
