@@ -8,6 +8,7 @@ const bodyParser = require('body-parser')
 
 // file imports
 const sessionRoutes = require('./routes/session')
+const actionRoutes = require('./routes/action')
 
 // define variables and methods
 const app = express()
@@ -21,22 +22,22 @@ app.use(express.static(path.join(__dirname, 'react-build')))
 app.use(express.static(path.join(__dirname, 'public')))
 
 // handling cors policy
-// app.use('/*', (req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*')
-//   res.header('Access-Control-Allow-Headers', '*')
-//   next()
-// })
+app.use('/*', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', '*')
+  next()
+})
 
 // serving react-app
 app.get('/', (req, res) => {
   return res
     .status(200)
-    .send(path.join(__dirname, 'frontend-build', 'index.html'))
+    .sendFile(path.join(__dirname, 'react-build/index.html'))
 })
 
 // serving routes
 app.use('/api/v1/session', sessionRoutes)
-// app.use('/api/v1/action', actionRoutes)
+app.use('/api/v1/action', actionRoutes)
 
 // handling errors
 app.use((error, req, res, next) => {
