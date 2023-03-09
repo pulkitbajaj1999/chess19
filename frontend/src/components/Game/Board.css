@@ -1,0 +1,108 @@
+.board-component {
+  height: 100%;
+}
+
+table {
+  height: 100vh;
+  width: 100vh;
+  table-layout: fixed;
+  margin: auto;
+}
+
+.piece {
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.piece.white span {
+  color: burlywood;
+}
+
+.piece.black span {
+  color: white;
+}
+
+span {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.coordinate-rank {
+  position: absolute;
+  top: 2%;
+  left: 2%;
+}
+
+.coordinate-file {
+  position: absolute;
+  right: 4%;
+  bottom: 2%;
+}
+
+/* BACKGROUND COLOR */
+.white {
+  background-color: white;
+}
+
+.white.active {
+  background-color: rgb(250, 234, 128);
+}
+
+.black {
+  background-color: burlywood;
+}
+
+.black.active {
+  background-color: rgb(242, 213, 28);
+}
+
+
+/* PIECE IMAGES */
+.black-rook {
+  background-image: url(../../assets/images/br.png);
+}
+
+.white-rook {
+  background-image: url(../../assets/images/wr.png);
+}
+
+.black-knight {
+  background-image: url(../../assets/images/bn.png);
+}
+
+.white-knight {
+  background-image: url(../../assets/images/wn.png);
+}
+
+.black-bishop {
+  background-image: url(../../assets/images/bb.png);
+}
+
+.white-bishop {
+  background-image: url(../../assets/images/wb.png);
+}
+
+.black-king {
+  background-image: url(../../assets/images/bk.png);
+}
+
+.white-king {
+  background-image: url(../../assets/images/wk.png);
+}
+
+.black-queen {
+  background-image: url(../../assets/images/bq.png);
+}
+
+.white-queen {
+  background-image: url(../../assets/images/wq.png);
+}
+
+.black-pawn {
+  background-image: url(../../assets/images/bp.png);
+}
+
+.white-pawn {
+  background-image: url(../../assets/images/wp.png);
+}

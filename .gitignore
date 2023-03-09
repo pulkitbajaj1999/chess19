@@ -130,3 +130,8 @@ dist
 .pnp.*
 
 .prettierignore
+
+
+# frontend node_modules
+fronend/node_modules
+frontend/build
