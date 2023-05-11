@@ -1,18 +1,16 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState } from 'react'
+import Game from './components/Game/Game'
 
 import Navigation from './components/Navigation/Navigation'
 import Sidebar from './components/Sidebar/Sidebar'
-import GameLocal from './components/Game/GameLocal'
-import GameSession from './components/Game/GameSession'
+// import GameLocal from './components/Game/GameLocal'
+// import GameSession from './components/Game/GameSession'
 
 function App() {
-  const sessionState = useSelector((state) => state.session)
   return (
     <React.Fragment>
       <Navigation />
-      {!sessionState.isActive && <GameLocal />}
-      {sessionState.isActive && <GameSession />}
+      <Game />
       <Sidebar />
     </React.Fragment>
   )

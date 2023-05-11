@@ -1,15 +1,6 @@
 import React from 'react'
 
-const Piece = ({
-  square,
-  piece,
-  rank,
-  file,
-  isActive,
-  isHint,
-  showCoordinate,
-  onClick,
-}) => {
+const Piece = ({ rank, file, isActive, showCoordinate, onClick, data }) => {
   const colorMapping = { b: 'black', w: 'white' }
   const typeMapping = {
     r: 'rook',
@@ -28,21 +19,21 @@ const Piece = ({
   }
 
   const getPieceClass = () => {
-    if (!piece) return ''
-    const color = colorMapping[piece.color]
-    const type = typeMapping[piece.type]
+    if (!data) return ''
+    const color = colorMapping[data.color]
+    const type = typeMapping[data.type]
     return `${color}-${type}`
   }
 
   const squareClasses = `piece ${getSquareColor(
     rank,
     file
-  )} ${getPieceClass()} ${isActive ? 'active' : ''} ${isHint ? 'hint' : ''}`
+  )} ${getPieceClass()} ${isActive ? 'active' : ''}`
 
   return (
-    <td id={square} className={squareClasses} onClick={onClick}>
-      {showCoordinate?.rank && <span className="coordinate-rank">{rank}</span>}
-      {showCoordinate?.file && <span className="coordinate-file">{file}</span>}
+    <td id={file + rank} className={squareClasses} onClick={onClick}>
+      {showCoordinate.rank && <span className="coordinate-rank">{rank}</span>}
+      {showCoordinate.file && <span className="coordinate-file">{file}</span>}
     </td>
   )
 }

@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import boardReducer from './board'
-import sessionReducer from './session'
+import gameReducer from './game'
+import commonReducer from './common'
 
 const store = configureStore({
-  reducer: { board: boardReducer, session: sessionReducer },
+  reducer: { game: gameReducer, common: commonReducer },
 })
 
 export default store

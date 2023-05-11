@@ -1,56 +1,42 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { START_FEN } from '../../constants'
 
-import { boardActions } from '../../store/board'
-import { sessionActions } from '../../store/session'
+import { setChess, flipBoard } from '../../store/common'
+
 import ButtonLarge from '../../UI/ButtonLarge'
 import classes from './Sidebar.module.css'
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || ''
+import { MODE } from '../../constants'
 
 const Sidebar = () => {
-  const sessionState = useSelector((state) => state.session)
   const dispatch = useDispatch()
-  const { id: sessionID, isActive: sessionIsActive } = sessionState
-
-  const postAction = (type, payload) => {
-    const url = BASE_URL + '/api/v1/action'
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionID,
-        action: { type, payload },
-      }),
-    })
-      .then((res) => {
-        return res.json()
-      })
-      .then((data) => {})
-  }
+  const gameState = useSelector((state) => state.game)
+  const commonState = useSelector((state) => state.common)
+  const { mode } = commonState
 
   const flipBoardHandler = () => {
-    sessionIsActive
-      ? dispatch(sessionActions.flipView())
-      : dispatch(boardActions.flipView())
+    dispatch(flipBoard())
   }
 
-  const undoHandler = () => {
-    sessionIsActive
-      ? postAction('undo', {})
-      : dispatch(boardActions.reverseMove())
-  }
+  const undoHandler = () => {}
 
   const resetHandler = () => {
-    sessionIsActive ? postAction('reset', {}) : dispatch(boardActions.reset())
+    dispatch(setChess(START_FEN))
   }
 
   return (
     <div className={classes['sidebar-component']}>
       <div className={classes['sidebar-control']}>
         <ButtonLarge onClick={flipBoardHandler}>Flip</ButtonLarge>
-        <ButtonLarge onClick={undoHandler}>Undo</ButtonLarge>
-        <ButtonLarge onClick={resetHandler}>Reset</ButtonLarge>
+        {/* <ButtonLarge onClick={undoHandler} disabled={true}>
+          Undo
+        </ButtonLarge> */}
+        {mode === MODE.LOCAL && (
+          <ButtonLarge onClick={resetHandler} disabled={mode !== MODE.LOCAL}>
+            Reset
+          </ButtonLarge>
+        )}
       </div>
     </div>
   )

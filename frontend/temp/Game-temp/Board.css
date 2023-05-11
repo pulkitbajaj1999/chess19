@@ -57,11 +57,6 @@ span {
   background-color: rgb(242, 213, 28);
 }
 
-/* HINT */
-.piece.hint {
-  background-color: lightgreen;
-}
-
 /* PIECE IMAGES */
 .black-rook {
   background-image: url(../../assets/images/br.png);

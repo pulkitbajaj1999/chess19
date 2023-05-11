@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import './Board.css'
 import { convertFenToBoardMapping } from '../../utils/board'
-import { boardActions } from '../../store/board'
+import { boardActions } from '../../store/session'
 import BoardView from './BoardView'
 
 const GameLocal = () => {

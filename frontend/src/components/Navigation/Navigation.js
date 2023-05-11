@@ -1,20 +1,19 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import classes from './Navigation.module.css'
-import { boardActions } from '../../store/board'
-import session, { sessionActions } from '../../store/session'
+import { setChess, setGameMode } from '../../store/common'
+import { createGame, joinGame } from '../../store/gameActions'
+
 import JoinSessionOverlay from './JoinSessionOverlay'
 import NewSessionoverlay from './NewSessionOverlay'
 
-const Navigation = () => {
-  // laoding environment variables
-  const BASE_URL = process.env.REACT_APP_BASE_URL
+import classes from './Navigation.module.css'
+import { START_FEN, MODE } from '../../constants'
 
-  // load states
-  const boardState = useSelector((state) => state.board)
-  const sessionState = useSelector((state) => state.session)
+const Navigation = () => {
   const dispatch = useDispatch()
+  const gameState = useSelector((state) => state.game)
+  const commonState = useSelector((state) => state.common)
 
   // define current state variables
   const [showLocalGameOverlay, setShowLocalGameOverlay] = useState(false)
@@ -49,59 +48,18 @@ const Navigation = () => {
   }
 
   const startLocalGameHandler = () => {
-    dispatch(sessionActions.deactivateSession())
+    dispatch(setChess(START_FEN))
+    dispatch(setGameMode(MODE.LOCAL))
     closeLocalGameOverlay()
   }
 
   const startNewSessionHandler = () => {
-    const url = BASE_URL + '/api/v1/session/new'
-    fetch(url)
-      .then((res) => {
-        return res.json()
-      })
-      .then((data) => {
-        const { sessionID, currentState } = data
-        const whiteFaceView = true
-        dispatch(
-          sessionActions.setSession({ sessionID, currentState, whiteFaceView })
-        )
-      })
-      .then(() => {
-        closeNewSessionOverlay()
-      })
+    dispatch(createGame())
+    closeNewSessionOverlay()
   }
-
   const joinSessionHandler = (sessionID) => {
-    const url =
-      BASE_URL + '/api/v1/session/existing' + `?sessionID=${sessionID}`
-    fetch(url)
-      .then((res) => {
-        if (res.status === 404) throw Error('Error while fetching session')
-        return res.json()
-      })
-      .then((data) => {
-        const currentState = data.currentState
-        const whiteFaceView = false
-        if (currentState) {
-          dispatch(
-            sessionActions.setSession({
-              sessionID,
-              currentState,
-              whiteFaceView,
-            })
-          )
-        } else if (data.error) {
-          throw Error(data.error)
-        } else {
-          throw Error('Improper session data')
-        }
-      })
-      .then(() => {
-        closeJoinSessionOverlay()
-      })
-      .catch((error) => {
-        setJoinSessionError(error.message)
-      })
+    dispatch(joinGame(sessionID))
+    closeJoinSessionOverlay()
   }
 
   return (
@@ -110,11 +68,13 @@ const Navigation = () => {
         <div className={classes['nav-head-component']}>Chess19</div>
         <div
           className={
-            sessionState.isActive
-              ? classes['nav-link-component']
-              : classes['nav-link-component-active']
+            commonState?.mode === MODE.LOCAL
+              ? classes['nav-link-component-active']
+              : classes['nav-link-component']
           }
-          onClick={sessionState.isActive ? openLocalGameOverlay : undefined}
+          onClick={
+            commonState?.mode === MODE.LOCAL ? undefined : openLocalGameOverlay
+          }
         >
           <span>Local</span>
         </div>
@@ -133,9 +93,15 @@ const Navigation = () => {
       </div>
       <div className={classes['nav-bottom']}>
         <div className={classes['nav-session-component']}>
-          <span className={classes['session-heading']}>SessionID</span>
-          <span className={classes['session-value']}>{sessionState.id}</span>
+          <span className={classes['session-heading']}>Mode</span>
+          <span className={classes['session-value']}>{commonState.mode}</span>
         </div>
+        {commonState?.mode !== MODE.LOCAL && (
+          <div className={classes['nav-session-component']}>
+            <span className={classes['session-heading']}>RoomID</span>
+            <span className={classes['session-value']}>{gameState.roomId}</span>
+          </div>
+        )}
       </div>
       {showLocalGameOverlay && (
         <NewSessionoverlay
